@@ -1,3 +1,15 @@
+#[
+
+  TODO:
+    [X] User
+    [X] Track
+    [X] Stream
+    [ ] Playlist
+    [ ] Favorites
+    [ ] Search
+    
+]#
+
 import httpclient, json
 
 type 
