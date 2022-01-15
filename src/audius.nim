@@ -13,6 +13,12 @@ type
         #coverPhoto*, profitePicture*: string
         is_verified*: bool
 
+    Track* = object
+        description*, genre*, id*, mood*, release_date*, tags*, title*: string
+        repost_count*, favorite_count*, duration*, play_count*: int
+        downloadable*: bool
+        user*: User
+
 proc newAudiusApi*(appName: string): AudiusApi =
     result.headers = newHttpHeaders([("Accept", "application/json")])
     result.client = newHttpClient(headers = result.headers)
@@ -23,3 +29,10 @@ proc newAudiusApi*(appName: string): AudiusApi =
 proc getUser*(api: AudiusApi, id: string): User =
     let user = parseJson(api.client.getContent(api.server & "/users/" & id ))
     result = to(user["data"], User)
+
+proc getTrack*(api: AudiusApi, id: string): Track =
+    let track = parseJson(api.client.getContent(api.server & "/tracks/" & id ))
+    result = to(track["data"], Track)
+
+proc getStreamTrack*(api: AudiusApi, id: string): string =
+    result = api.client.getContent(api.server & "/tracks/" & id & "/stream" )
