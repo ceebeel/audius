@@ -1,65 +1,88 @@
-#[
-
-  TODO:
-    [X] User
-    [X] Track
-    [X] Stream
-    [ ] Playlist
-    [ ] Favorites
-    [ ] Search
-    
-]#
-
 import httpclient, json
 
 const EndPoint = "https://api.audius.co"
 
-type 
-    Audius* = object
-        client: HttpClient
-        headers: HttpHeaders
-        appName: string
-        server: string
+type
+  Audius* = ref object
+    client: HttpClient
+    headers: HttpHeaders
+    appName: string
+    server: string
 
-    User* = object
-        album_count, followee_count*, follower_count*, playlist_count*, repost_count*, track_count*: int
-        bio*, handle*, id*, location*, name*: string
-        #coverPhoto*, profitePicture*: string
-        is_verified*: bool
+  UserSchema* = ref object
+    album_count, followee_count*, follower_count*, playlist_count*,
+        repost_count*, track_count*: int
+    bio*, handle*, id*, location*, name*: string
+    #coverPhoto*, profitePicture*: string
+    is_verified*: bool
 
-    Track* = object
-        description*, genre*, id*, mood*, release_date*, tags*, title*: string
-        repost_count*, favorite_count*, duration*, play_count*: int
-        downloadable*: bool
-        user*: User
+  User* = ref object
+    schema: UserSchema
+    api: Audius
+
+  TrackSchema* = ref object
+    description*, genre*, id*, mood*, release_date*, tags*, title*: string
+    repost_count*, favorite_count*, duration*, play_count*: int
+    downloadable*: bool
+    user*: UserSchema
+
+  Track* = ref object
+    schema: TrackSchema
+    api: Audius
+
+template uri(content: string): string =
+  api.server & content & "?app_name=" & api.appName
 
 proc newAudius*(appName: string = "EXAMPLEAPP"): Audius =
-    result.headers = newHttpHeaders([("Accept", "application/json")])
-    result.client = newHttpClient(headers = result.headers)
-    result.appName = "&app_name=" & appName
-    let servers = parseJson(result.client.getContent(EndPoint))
-    result.server = servers["data"][0].getStr & "/v1"
+  new result
+  result.headers = newHttpHeaders([("Accept", "application/json")])
+  result.client = newHttpClient(headers = result.headers)
+  result.appName = appName
+  let servers = parseJson(result.client.getContent(EndPoint))
+  result.server = servers["data"][0].getStr & "/v1"
 
+# User
 proc getUser*(api: Audius, id: string): User =
-    let user = parseJson(api.client.getContent(api.server & "/users/" & id ))
-    result = to(user["data"], User)
+  new result
+  let json = parseJson(api.client.getContent(uri("/users/" & id)))
 
-iterator searchUsers*(api: Audius, query: string, onlyDowloadable = false): User =
-    let users = parseJson(api.client.getContent(
-        api.server & "/users/search?query=" & query & "&only_downloadable=" & $onlyDowloadable))
-    for user in users["data"]:
-        yield to(user, User)
+  let schema = to(json["data"], UserSchema)
+  result.schema = schema
+  result.api = api
 
+iterator tracks*(user: User): Track =
+  let json = parseJson(user.api.client.getContent(user.api.server &
+      "/users/" & user.schema.id & "/tracks"))
+  for track in json["data"]:
+    let result = Track()
+    result.schema = to(track, TrackSchema)
+    yield result
+
+iterator searchUsers*(api: Audius, query: string,
+    onlyDowloadable = false): User =
+  let json = parseJson(api.client.getContent(api.server &
+      "/users/search?query=" & query & "&only_downloadable=" &
+      $onlyDowloadable))
+  for user in json["data"]:
+    let result = User(api: api)
+    result.schema = to(user, UserSchema)
+    yield result
+
+#Track
 proc getTrack*(api: Audius, id: string): Track =
-    let track = parseJson(api.client.getContent(api.server & "/tracks/" & id ))
-    result = to(track["data"], Track)
+  let json = parseJson(api.client.getContent(api.server & "/tracks/" & id))
+  result.schema = to(json["data"], TrackSchema)
+  result.api = api
 
 proc getStreamTrack*(api: Audius, id: string): string =
-    result = api.client.getContent(api.server & "/tracks/" & id & "/stream" )
+  result = api.client.getContent(api.server & "/tracks/" & id & "/stream")
 
-
+# Test
 when isMainModule:
-    let audius = newAudius()
-    for user in audius.searchUsers("gloom"):
-        echo user.name
+  let audius = newAudius()
+  for user in audius.searchUsers("Brownies"):
+    echo user.schema.name
 
+  let user = audius.getUser("nlGNe")
+  for track in user.tracks:
+    echo track.schema.title
