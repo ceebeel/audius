@@ -33,7 +33,7 @@ type
         downloadable*: bool
         user*: User
 
-proc newAudius*(appName: string = "EXAMPLE_:PP"): Audius =
+proc newAudius*(appName: string = "EXAMPLEAPP"): Audius =
     result.headers = newHttpHeaders([("Accept", "application/json")])
     result.client = newHttpClient(headers = result.headers)
     result.appName = "&app_name=" & appName
@@ -44,9 +44,22 @@ proc getUser*(api: Audius, id: string): User =
     let user = parseJson(api.client.getContent(api.server & "/users/" & id ))
     result = to(user["data"], User)
 
+iterator searchUsers*(api: Audius, query: string, onlyDowloadable = false): User =
+    let users = parseJson(api.client.getContent(
+        api.server & "/users/search?query=" & query & "&only_downloadable=" & $onlyDowloadable))
+    for user in users["data"]:
+        yield to(user, User)
+
 proc getTrack*(api: Audius, id: string): Track =
     let track = parseJson(api.client.getContent(api.server & "/tracks/" & id ))
     result = to(track["data"], Track)
 
 proc getStreamTrack*(api: Audius, id: string): string =
     result = api.client.getContent(api.server & "/tracks/" & id & "/stream" )
+
+
+when isMainModule:
+    let audius = newAudius()
+    for user in audius.searchUsers("gloom"):
+        echo user.name
+
