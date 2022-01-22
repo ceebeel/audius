@@ -1,5 +1,6 @@
 import std/httpclient, std/json
 from std/strutils import split
+from std/uri import encodeUrl
 
 const EndPoint = "https://api.audius.co"
 
@@ -22,6 +23,7 @@ type
     api: Audius
 
   TrackSchema* = ref object
+    #artwork
     description*, genre*, id*, mood*, release_date*, tags*, title*: string
     repost_count*, favorite_count*, duration*, play_count*: int
     downloadable*: bool
@@ -29,6 +31,17 @@ type
 
   Track* = ref object
     schema: TrackSchema
+    api: Audius
+
+  PlaylistSchema* = ref object
+    #artwork
+    description, id, playlist_name: string
+    repost_count, favorite_count, total_play_count: int
+    is_album: bool
+    user: UserSchema
+
+  Playlist* = ref object
+    schema: PlaylistSchema
     api: Audius
 
 # Audius
@@ -52,6 +65,29 @@ proc getTrack*(api: Audius, id: string): Track =
 
 proc getStreamTrack*(api: Audius, id: string): string =
   result = api.client.getContent(api.server & "/tracks/" & id & "/stream" & "?app_name=" & api.appName)
+
+# Playlist
+proc getPlaylist*(api: Audius, id: string): Playlist =
+  new result
+  let query = api.get("/playlists/" & id)
+  result.schema = to(query["data"][0], PlaylistSchema)
+  result.api = api
+
+iterator tracks*(playlist: Playlist): Track =
+  let query = playlist.api.get("/playlists/" & playlist.schema.id & "/tracks")
+  for track in query["data"]:
+    let result = Track()
+    result.schema = to(track, TrackSchema)
+    yield result
+
+iterator searchPlaylists*(api: Audius, query: string,
+    onlyDowloadable = false): Playlist =
+  let query = api.get("/playlists/search?query=" & encodeUrl(query) & "&only_downloadable=" &
+      $onlyDowloadable)
+  for playlist in query["data"]:
+    let result = Playlist(api: api)
+    result.schema = to(playlist, PlaylistSchema)
+    yield result
 
 # User
 proc getUser*(api: Audius, id: string): User =
@@ -87,7 +123,7 @@ iterator tags*(user: User): string =
 
 iterator searchUsers*(api: Audius, query: string,
     onlyDowloadable = false): User =
-  let query = api.get("/users/search?query=" & query & "&only_downloadable=" &
+  let query = api.get("/users/search?query=" & encodeUrl(query) & "&only_downloadable=" &
       $onlyDowloadable)
   for user in query["data"]:
     let result = User(api: api)
@@ -99,7 +135,7 @@ iterator searchUsers*(api: Audius, query: string,
 when isMainModule:
   let audius = newAudius()
 
-  for user in audius.searchUsers("Brownies"):
+#[   for user in audius.searchUsers("Brownies"):
     echo "User: " & user.schema.name
 
   let user = audius.getUser("nlGNe")
@@ -114,4 +150,13 @@ when isMainModule:
     echo "Repost: " & repost.schema.title
 
   for tag in user.tags:
-    echo "Tag: " & tag
+    echo "Tag: " & tag ]#
+
+  # Playlist
+  for playlist in audius.searchPlaylists("Hot & New"):
+    echo "Palylist: " & playlist.schema.playlist_name
+
+  let playlist = audius.getPlaylist("DOPRl")
+
+  for track in playlist.tracks:
+    echo "Playlist Track: " & track.schema.title
