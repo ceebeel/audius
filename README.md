@@ -3,7 +3,7 @@ Audius is a simple client library for interacting with the Audius protocol. (aud
 `nimble install audius`
 
 # Example
-'''
+```
 import audius
 
 #Create new audius client.
@@ -42,5 +42,4 @@ let playlist = audius.getPlaylist("DOPRl")
 # List tracks in playlist.
 for track in playlist.tracks:
   echo "Playlist Track: " & track.schema.title
-'''
-
+```
