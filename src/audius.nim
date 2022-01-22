@@ -51,7 +51,7 @@ proc getTrack*(api: Audius, id: string): Track =
   result.api = api
 
 proc getStreamTrack*(api: Audius, id: string): string =
-  result = api.client.getContent(api.server & "/tracks/" & id & "/stream")
+  result = api.client.getContent(api.server & "/tracks/" & id & "/stream" & "?app_name=" & api.appName)
 
 # User
 proc getUser*(api: Audius, id: string): User =
