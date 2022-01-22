@@ -1,8 +1,9 @@
 # Audius
-Audius is a simple client library for interacting with the Audius protocol. (audius.org)
+Audius is a simple client library for interacting with the Audius free API. (audius.org)
+The official API documentation can be found [here](https://audiusproject.github.io/api-docs/#audius-api-docs).
 
 # Installation
-`nimble install audius`
+```nimble install audius```
 
 # Example
 ```
@@ -45,3 +46,7 @@ let playlist = audius.getPlaylist("DOPRl")
 for track in playlist.tracks:
   echo "Playlist Track: " & track.schema.title
 ```
+# Compilation 
+- Use SSL:
+```nim r -d:ssl examples/simple.nim```
+- Add [cacert.pem](bin/cacert.pem) in your running directory.

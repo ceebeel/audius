@@ -131,36 +131,4 @@ iterator searchUsers*(api: Audius, query: string,
     yield result
 
 
-# Test
-when isMainModule:
-  let audius = newAudius()
-
-#[  
-
-  for user in audius.searchUsers("Brownies"):
-    echo "User: " & user.schema.name
-
-  let user = audius.getUser("nlGNe")
-
-  for track in user.tracks:
-    echo "Track: " & track.schema.title
-
-  for favorite in user.favorites:
-    echo "Favorite: " & favorite.schema.title
-
-  for repost in user.reposts:
-    echo "Repost: " & repost.schema.title
-
-  for tag in user.tags:
-    echo "Tag: " & tag 
-
-  # Playlist
-  for playlist in audius.searchPlaylists("Hot & New"):
-    echo "Palylist: " & playlist.schema.playlist_name
-
-  let playlist = audius.getPlaylist("DOPRl")
-
-  for track in playlist.tracks:
-    echo "Playlist Track: " & track.schema.title 
-    
-  ]#
+# when isMainModule:
