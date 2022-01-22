@@ -74,6 +74,14 @@ iterator favorites*(user: User): Track =
   for fav in json["data"]:
     yield user.api.getTrack(fav["favorite_item_id"].getStr)
 
+iterator reposts*(user: User): Track =
+  let json = parseJson(user.api.client.getContent(user.api.server &
+      "/users/" & user.schema.id & "/reposts"))
+  for repost in json["data"]:
+    let result = Track()
+    result.schema = to(repost["item"], TrackSchema)
+    yield result
+
 iterator searchUsers*(api: Audius, query: string,
     onlyDowloadable = false): User =
   let json = parseJson(api.client.getContent(api.server &
@@ -88,13 +96,17 @@ iterator searchUsers*(api: Audius, query: string,
 # Test
 when isMainModule:
   let audius = newAudius()
-  for user in audius.searchUsers("Brownies"):
-    echo "User: " & user.schema.name
+
+  #for user in audius.searchUsers("Brownies"):
+  #  echo "User: " & user.schema.name
 
   let user = audius.getUser("nlGNe")
 
-  for track in user.tracks:
-    echo "Track: " & track.schema.title
+  #for track in user.tracks:
+  #  echo "Track: " & track.schema.title
 
-  for track in user.favorites:
-    echo "Fav: " & track.schema.title
+  #for track in user.favorites:
+  #  echo "Favorite: " & track.schema.title
+
+  for repost in user.reposts:
+    echo "Repost: " & repost.schema.title
