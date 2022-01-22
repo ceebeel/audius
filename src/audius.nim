@@ -1,4 +1,5 @@
-import httpclient, json
+import std/httpclient, std/json
+from std/strutils import split
 
 const EndPoint = "https://api.audius.co"
 
@@ -82,6 +83,13 @@ iterator reposts*(user: User): Track =
     result.schema = to(repost["item"], TrackSchema)
     yield result
 
+iterator tags*(user: User): string =
+  # Don't work. API is broken !?
+  let json = parseJson(user.api.client.getContent(user.api.server &
+      "/users/" & user.schema.id & "/tags"))
+  for tag in json["data"].getStr.split(','):
+    yield tag
+
 iterator searchUsers*(api: Audius, query: string,
     onlyDowloadable = false): User =
   let json = parseJson(api.client.getContent(api.server &
@@ -105,8 +113,11 @@ when isMainModule:
   #for track in user.tracks:
   #  echo "Track: " & track.schema.title
 
-  #for track in user.favorites:
-  #  echo "Favorite: " & track.schema.title
+  #for favorite in user.favorites:
+  #  echo "Favorite: " & favorite.schema.title
 
-  for repost in user.reposts:
-    echo "Repost: " & repost.schema.title
+  #for repost in user.reposts:
+  #  echo "Repost: " & repost.schema.title
+
+  for tag in user.tags:
+    echo "Tag: " & tag
