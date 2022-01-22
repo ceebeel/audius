@@ -1,5 +1,7 @@
 # Audius
 Audius is a simple client library for interacting with the Audius protocol. (audius.org)
+
+# Installation
 `nimble install audius`
 
 # Example
