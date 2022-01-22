@@ -1,5 +1,5 @@
 # Audius
-Audius is a simple client library for interacting with the Audius free API. (audius.org)
+Audius is a simple client library for interacting with the Audius free API. (audius.org)\
 The official API documentation can be found [here](https://audiusproject.github.io/api-docs/#audius-api-docs).
 
 # Installation
