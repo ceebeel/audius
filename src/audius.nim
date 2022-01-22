@@ -41,6 +41,16 @@ proc newAudius*(appName: string = "EXAMPLEAPP"): Audius =
   let servers = parseJson(result.client.getContent(EndPoint))
   result.server = servers["data"][0].getStr & "/v1"
 
+#Track
+proc getTrack*(api: Audius, id: string): Track =
+  new result
+  let json = parseJson(api.client.getContent(api.server & "/tracks/" & id))
+  result.schema = to(json["data"], TrackSchema)
+  result.api = api
+
+proc getStreamTrack*(api: Audius, id: string): string =
+  result = api.client.getContent(api.server & "/tracks/" & id & "/stream")
+
 # User
 proc getUser*(api: Audius, id: string): User =
   new result
@@ -58,6 +68,12 @@ iterator tracks*(user: User): Track =
     result.schema = to(track, TrackSchema)
     yield result
 
+iterator favorites*(user: User): Track =
+  let json = parseJson(user.api.client.getContent(user.api.server &
+      "/users/" & user.schema.id & "/favorites"))
+  for fav in json["data"]:
+    yield user.api.getTrack(fav["favorite_item_id"].getStr)
+
 iterator searchUsers*(api: Audius, query: string,
     onlyDowloadable = false): User =
   let json = parseJson(api.client.getContent(api.server &
@@ -68,21 +84,17 @@ iterator searchUsers*(api: Audius, query: string,
     result.schema = to(user, UserSchema)
     yield result
 
-#Track
-proc getTrack*(api: Audius, id: string): Track =
-  let json = parseJson(api.client.getContent(api.server & "/tracks/" & id))
-  result.schema = to(json["data"], TrackSchema)
-  result.api = api
-
-proc getStreamTrack*(api: Audius, id: string): string =
-  result = api.client.getContent(api.server & "/tracks/" & id & "/stream")
 
 # Test
 when isMainModule:
   let audius = newAudius()
   for user in audius.searchUsers("Brownies"):
-    echo user.schema.name
+    echo "User: " & user.schema.name
 
   let user = audius.getUser("nlGNe")
+
   for track in user.tracks:
-    echo track.schema.title
+    echo "Track: " & track.schema.title
+
+  for track in user.favorites:
+    echo "Fav: " & track.schema.title
