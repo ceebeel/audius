@@ -31,8 +31,9 @@ type
     schema: TrackSchema
     api: Audius
 
-template uri(content: string): string =
-  api.server & content & "?app_name=" & api.appName
+# Audius
+template get(api: typed, query: string): JsonNode =
+  parseJson(api.client.getContent(api.server & query & "?app_name=" & api.appName))
 
 proc newAudius*(appName: string = "EXAMPLEAPP"): Audius =
   new result
@@ -42,11 +43,11 @@ proc newAudius*(appName: string = "EXAMPLEAPP"): Audius =
   let servers = parseJson(result.client.getContent(EndPoint))
   result.server = servers["data"][0].getStr & "/v1"
 
-#Track
+# Track
 proc getTrack*(api: Audius, id: string): Track =
   new result
-  let json = parseJson(api.client.getContent(api.server & "/tracks/" & id))
-  result.schema = to(json["data"], TrackSchema)
+  let query = api.get("/tracks/" & id)
+  result.schema = to(query["data"], TrackSchema)
   result.api = api
 
 proc getStreamTrack*(api: Audius, id: string): string =
@@ -55,47 +56,40 @@ proc getStreamTrack*(api: Audius, id: string): string =
 # User
 proc getUser*(api: Audius, id: string): User =
   new result
-  let json = parseJson(api.client.getContent(uri("/users/" & id)))
-
-  let schema = to(json["data"], UserSchema)
-  result.schema = schema
+  let query = api.get("/users/" & id)
+  result.schema = to(query["data"], UserSchema)
   result.api = api
 
 iterator tracks*(user: User): Track =
-  let json = parseJson(user.api.client.getContent(user.api.server &
-      "/users/" & user.schema.id & "/tracks"))
-  for track in json["data"]:
+  let query = user.api.get("/users/" & user.schema.id & "/tracks")
+  for track in query["data"]:
     let result = Track()
     result.schema = to(track, TrackSchema)
     yield result
 
 iterator favorites*(user: User): Track =
-  let json = parseJson(user.api.client.getContent(user.api.server &
-      "/users/" & user.schema.id & "/favorites"))
-  for fav in json["data"]:
+  let query = user.api.get("/users/" & user.schema.id & "/favorites")
+  for fav in query["data"]:
     yield user.api.getTrack(fav["favorite_item_id"].getStr)
 
 iterator reposts*(user: User): Track =
-  let json = parseJson(user.api.client.getContent(user.api.server &
-      "/users/" & user.schema.id & "/reposts"))
-  for repost in json["data"]:
+  let query = user.api.get("/users/" & user.schema.id & "/reposts")
+  for repost in query["data"]:
     let result = Track()
     result.schema = to(repost["item"], TrackSchema)
     yield result
 
 iterator tags*(user: User): string =
   # Don't work. API is broken !?
-  let json = parseJson(user.api.client.getContent(user.api.server &
-      "/users/" & user.schema.id & "/tags"))
-  for tag in json["data"].getStr.split(','):
+  let query = user.api.get("/users/" & user.schema.id & "/tags")
+  for tag in query["data"].getStr.split(','):
     yield tag
 
 iterator searchUsers*(api: Audius, query: string,
     onlyDowloadable = false): User =
-  let json = parseJson(api.client.getContent(api.server &
-      "/users/search?query=" & query & "&only_downloadable=" &
-      $onlyDowloadable))
-  for user in json["data"]:
+  let query = api.get("/users/search?query=" & query & "&only_downloadable=" &
+      $onlyDowloadable)
+  for user in query["data"]:
     let result = User(api: api)
     result.schema = to(user, UserSchema)
     yield result
@@ -105,19 +99,19 @@ iterator searchUsers*(api: Audius, query: string,
 when isMainModule:
   let audius = newAudius()
 
-  #for user in audius.searchUsers("Brownies"):
-  #  echo "User: " & user.schema.name
+  for user in audius.searchUsers("Brownies"):
+    echo "User: " & user.schema.name
 
   let user = audius.getUser("nlGNe")
 
-  #for track in user.tracks:
-  #  echo "Track: " & track.schema.title
+  for track in user.tracks:
+    echo "Track: " & track.schema.title
 
-  #for favorite in user.favorites:
-  #  echo "Favorite: " & favorite.schema.title
+  for favorite in user.favorites:
+    echo "Favorite: " & favorite.schema.title
 
-  #for repost in user.reposts:
-  #  echo "Repost: " & repost.schema.title
+  for repost in user.reposts:
+    echo "Repost: " & repost.schema.title
 
   for tag in user.tags:
     echo "Tag: " & tag
