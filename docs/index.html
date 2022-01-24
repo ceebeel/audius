@@ -91,6 +91,7 @@ function main() {
     </select>
   </div>
   <ul class="simple simple-toc" id="toc-list">
+<li><a class="reference" id="examples_toc" href="#examples">Examples</a></li>
 <li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
@@ -100,36 +101,26 @@ function main() {
   headers: HttpHeaders
   appName: string
   server: string">Audius</a></li>
-  <li><a class="reference" href="#UserSchema"
-    title="UserSchema = ref object
-  album_count, followee_count*, follower_count*, playlist_count*, repost_count*,
-  track_count*: int
-  bio*, handle*, id*, location*, name*: string
-  is_verified*: bool">UserSchema</a></li>
   <li><a class="reference" href="#User"
-    title="User = ref object
-  schema: UserSchema
+    title="User = object
+  albumCount*, followeeCount*, followerCount*, playlistCount*, repostCount*,
+  trackCount*: int
+  bio*, handle*, id*, location*, name*: string
+  isVerified*: bool
   api: Audius">User</a></li>
-  <li><a class="reference" href="#TrackSchema"
-    title="TrackSchema = ref object
-  description*, genre*, id*, mood*, release_date*, tags*, title*: string
-  repost_count*, favorite_count*, duration*, play_count*: int
-  downloadable*: bool
-  user*: UserSchema
-  dumb: string">TrackSchema</a></li>
   <li><a class="reference" href="#Track"
-    title="Track = ref object
-  schema: TrackSchema
+    title="Track = object
+  description*, genre*, id*, mood*, releaseDate*, tags*, title*: string
+  repostCount*, favoriteCount*, duration*, playCount*: int
+  downloadable*: bool
+  user*: User
   api: Audius">Track</a></li>
-  <li><a class="reference" href="#PlaylistSchema"
-    title="PlaylistSchema = ref object
-  description, id, playlist_name: string
-  repost_count, favorite_count, total_play_count: int
-  is_album: bool
-  user: UserSchema">PlaylistSchema</a></li>
   <li><a class="reference" href="#Playlist"
-    title="Playlist = ref object
-  schema: PlaylistSchema
+    title="Playlist = object
+  description*, id*, playlistName*: string
+  repostCount*, favoriteCount*, totalPlayCount*: int
+  isAlbum*: bool
+  user*: User
   api: Audius">Playlist</a></li>
 
   </ul>
@@ -157,9 +148,42 @@ function main() {
     title="getUser(api: Audius; id: string): User">getUser,<wbr>Audius,<wbr>string</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">searchUsers
+      <li><a class="reference" href="#searchUsers%2CAudius%2Cstring"
+    title="searchUsers(api: Audius; query: string; onlyDowloadable = false): seq[User]">searchUsers,<wbr>Audius,<wbr>string</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">parseHook
+      <li><a class="reference" href="#parseHook%2Cstring%2Cint%2CAudius"
+    title="parseHook(s: string; i: var int; v: var Audius)">parseHook,<wbr>string,<wbr>int,<wbr>Audius</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">newAudius
       <li><a class="reference" href="#newAudius%2Cstring"
     title="newAudius(appName: string = &quot;EXAMPLEAPP&quot;): Audius">newAudius,<wbr>string</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">searchPlaylists
+      <li><a class="reference" href="#searchPlaylists%2CAudius%2Cstring"
+    title="searchPlaylists(api: Audius; query: string; onlyDowloadable = false): seq[
+    Playlist]">searchPlaylists,<wbr>Audius,<wbr>string</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">reposts
+      <li><a class="reference" href="#reposts%2CUser"
+    title="reposts(user: User): seq[Track]">reposts,<wbr>User</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">favorites
+      <li><a class="reference" href="#favorites%2CUser"
+    title="favorites(user: User): seq[Track]">favorites,<wbr>User</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">tracks
+      <li><a class="reference" href="#tracks%2CPlaylist"
+    title="tracks(playlist: Playlist): seq[Track]">tracks,<wbr>Playlist</a></li>
+  <li><a class="reference" href="#tracks%2CUser"
+    title="tracks(user: User): seq[Track]">tracks,<wbr>User</a></li>
 
   </ul>
 
@@ -168,10 +192,12 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#15" id="65">Iterators</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#tracks.i%2CPlaylist"
-    title="tracks(playlist: Playlist): Track">tracks</a></li>
-  <li><a class="reference" href="#searchPlaylists.i%2CAudius%2Cstring"
+      <li><a class="reference" href="#searchPlaylists.i%2CAudius%2Cstring"
     title="searchPlaylists(api: Audius; query: string; onlyDowloadable = false): Playlist">searchPlaylists</a></li>
+  <li><a class="reference" href="#tracks.i%2CPlaylist"
+    title="tracks(playlist: Playlist): Track">tracks</a></li>
+  <li><a class="reference" href="#searchUsers.i%2CAudius%2Cstring"
+    title="searchUsers(api: Audius; query: string; onlyDowloadable = false): User">searchUsers</a></li>
   <li><a class="reference" href="#tracks.i%2CUser"
     title="tracks(user: User): Track">tracks</a></li>
   <li><a class="reference" href="#favorites.i%2CUser"
@@ -180,8 +206,6 @@ function main() {
     title="reposts(user: User): Track">reposts</a></li>
   <li><a class="reference" href="#tags.i%2CUser"
     title="tags(user: User): string">tags</a></li>
-  <li><a class="reference" href="#searchUsers.i%2CAudius%2Cstring"
-    title="searchUsers(api: Audius; query: string; onlyDowloadable = false): User">searchUsers</a></li>
 
   </ul>
 </li>
@@ -192,7 +216,51 @@ function main() {
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
-  <p class="module-desc">Create new user by id.List user's tracks.List user's favorite tracks.List user reposted tracks.List common user's tags.Search playlistsCreate new playlist by id.List tracks in playlist.</p>
+  <p class="module-desc"><p>The <tt class="docutils literal"><span class="pre">audius</span></tt> module is simple wrapper to the Audius API (v1).</p>
+<p>Audius is a decentralized music streaming service. (<a class="reference external" href="https://audius.co/">audius.co</a> / <a class="reference external" href="https://audius.org/">audius.org</a>)</p>
+<p>The Audius API is entirely free to use.</p>
+<p>We ask that you adhere to the guidelines in this <a class="reference external" href="https://audiusproject.github.io/api-docs/">doc</a> and always credit artists.</p>
+
+<h1><a class="toc-backref" id="examples" href="#examples">Examples</a></h1><pre class="listing"><span class="Keyword">import</span> <span class="Identifier">audius</span>
+
+<span class="Comment"># Create new Audius client.</span>
+<span class="Keyword">let</span> <span class="Identifier">audius</span> <span class="Operator">=</span> <span class="Identifier">newAudius</span><span class="Punctuation">(</span><span class="Punctuation">)</span>
+
+<span class="Comment"># Search users.</span>
+<span class="Keyword">for</span> <span class="Identifier">user</span> <span class="Keyword">in</span> <span class="Identifier">audius</span><span class="Operator">.</span><span class="Identifier">searchUsers</span><span class="Punctuation">(</span><span class="StringLit">&quot;Brownies&quot;</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;User found: &quot;</span> <span class="Operator">&amp;</span> <span class="Identifier">user</span><span class="Operator">.</span><span class="Identifier">name</span>
+
+<span class="Comment"># Create new user by id.</span>
+<span class="Keyword">let</span> <span class="Identifier">user</span> <span class="Operator">=</span> <span class="Identifier">audius</span><span class="Operator">.</span><span class="Identifier">getUser</span><span class="Punctuation">(</span><span class="StringLit">&quot;nlGNe&quot;</span><span class="Punctuation">)</span>
+<span class="Identifier">echo</span> <span class="StringLit">&quot;User name: &quot;</span> <span class="Operator">&amp;</span> <span class="Identifier">user</span><span class="Operator">.</span><span class="Identifier">name</span>
+
+<span class="Comment"># List user's tracks.</span>
+<span class="Keyword">for</span> <span class="Identifier">track</span> <span class="Keyword">in</span> <span class="Identifier">user</span><span class="Operator">.</span><span class="Identifier">tracks</span><span class="Punctuation">:</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;User's Track: &quot;</span> <span class="Operator">&amp;</span> <span class="Identifier">track</span><span class="Operator">.</span><span class="Identifier">title</span>
+
+<span class="Comment"># List user's favorite tracks.</span>
+<span class="Keyword">for</span> <span class="Identifier">favorite</span> <span class="Keyword">in</span> <span class="Identifier">user</span><span class="Operator">.</span><span class="Identifier">favorites</span><span class="Punctuation">:</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;User's Favorite: &quot;</span> <span class="Operator">&amp;</span> <span class="Identifier">favorite</span><span class="Operator">.</span><span class="Identifier">title</span>
+
+<span class="Comment"># List user reposted tracks.</span>
+<span class="Keyword">for</span> <span class="Identifier">repost</span> <span class="Keyword">in</span> <span class="Identifier">user</span><span class="Operator">.</span><span class="Identifier">reposts</span><span class="Punctuation">:</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;User's Repost: &quot;</span> <span class="Operator">&amp;</span> <span class="Identifier">repost</span><span class="Operator">.</span><span class="Identifier">title</span>
+
+<span class="Comment"># List common user's tags.</span>
+<span class="Keyword">for</span> <span class="Identifier">tag</span> <span class="Keyword">in</span> <span class="Identifier">user</span><span class="Operator">.</span><span class="Identifier">tags</span><span class="Punctuation">:</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;User's Tag: &quot;</span> <span class="Operator">&amp;</span> <span class="Identifier">tag</span>
+
+<span class="Comment"># Search playlists</span>
+<span class="Keyword">for</span> <span class="Identifier">playlist</span> <span class="Keyword">in</span> <span class="Identifier">audius</span><span class="Operator">.</span><span class="Identifier">searchPlaylists</span><span class="Punctuation">(</span><span class="StringLit">&quot;Hot &amp; New&quot;</span><span class="Punctuation">)</span><span class="Punctuation">:</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;Palylist found: &quot;</span> <span class="Operator">&amp;</span> <span class="Identifier">playlist</span><span class="Operator">.</span><span class="Identifier">playlistName</span>
+
+<span class="Comment"># Create new playlist by id.</span>
+<span class="Keyword">let</span> <span class="Identifier">playlist</span> <span class="Operator">=</span> <span class="Identifier">audius</span><span class="Operator">.</span><span class="Identifier">getPlaylist</span><span class="Punctuation">(</span><span class="StringLit">&quot;DOPRl&quot;</span><span class="Punctuation">)</span>
+<span class="Identifier">echo</span> <span class="StringLit">&quot;Playlist name:&quot;</span>
+
+<span class="Comment"># List tracks in playlist.</span>
+<span class="Keyword">for</span> <span class="Identifier">track</span> <span class="Keyword">in</span> <span class="Identifier">playlist</span><span class="Operator">.</span><span class="Identifier">tracks</span><span class="Punctuation">:</span>
+  <span class="Identifier">echo</span> <span class="StringLit">&quot;Playlist's Track: &quot;</span> <span class="Operator">&amp;</span> <span class="Identifier">track</span><span class="Operator">.</span><span class="Identifier">title</span></pre></p>
   <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
@@ -205,74 +273,46 @@ function main() {
 </pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="UserSchema"></a>
-<dt><pre><a href="audius.html#UserSchema"><span class="Identifier">UserSchema</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">album_count</span><span class="Other">,</span> <span class="Identifier">followee_count</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">follower_count</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">playlist_count</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">repost_count</span><span class="Operator">*</span><span class="Other">,</span>
-  <span class="Identifier">track_count</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">bio</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">handle</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">location</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">is_verified</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
-</pre></dt>
-<dd>
-
-
+Audius API client.
 
 </dd>
 <a id="User"></a>
-<dt><pre><a href="audius.html#User"><span class="Identifier">User</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">schema</span><span class="Other">:</span> <a href="audius.html#UserSchema"><span class="Identifier">UserSchema</span></a>
+<dt><pre><a href="audius.html#User"><span class="Identifier">User</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">albumCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">followeeCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">followerCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">playlistCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">repostCount</span><span class="Operator">*</span><span class="Other">,</span>
+  <span class="Identifier">trackCount</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">bio</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">handle</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">location</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">isVerified</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a>
 </pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="TrackSchema"></a>
-<dt><pre><a href="audius.html#TrackSchema"><span class="Identifier">TrackSchema</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">description</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">genre</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">mood</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">release_date</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">title</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">repost_count</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">favorite_count</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">duration</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">play_count</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">downloadable</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
-  <span class="Identifier">user</span><span class="Operator">*</span><span class="Other">:</span> <a href="audius.html#UserSchema"><span class="Identifier">UserSchema</span></a>
-  <span class="Identifier">dumb</span><span class="Other">:</span> <span class="Identifier">string</span>
-</pre></dt>
-<dd>
-
-
+<a class="reference external" href="https://audiusproject.github.io/api-docs/#tocS_user">User schema</a>
 
 </dd>
 <a id="Track"></a>
-<dt><pre><a href="audius.html#Track"><span class="Identifier">Track</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">schema</span><span class="Other">:</span> <a href="audius.html#TrackSchema"><span class="Identifier">TrackSchema</span></a>
+<dt><pre><a href="audius.html#Track"><span class="Identifier">Track</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">description</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">genre</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">mood</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">releaseDate</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">title</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">repostCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">favoriteCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">duration</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">playCount</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">downloadable</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">user</span><span class="Operator">*</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a>
   <span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a>
 </pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="PlaylistSchema"></a>
-<dt><pre><a href="audius.html#PlaylistSchema"><span class="Identifier">PlaylistSchema</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">description</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Other">,</span> <span class="Identifier">playlist_name</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">repost_count</span><span class="Other">,</span> <span class="Identifier">favorite_count</span><span class="Other">,</span> <span class="Identifier">total_play_count</span><span class="Other">:</span> <span class="Identifier">int</span>
-  <span class="Identifier">is_album</span><span class="Other">:</span> <span class="Identifier">bool</span>
-  <span class="Identifier">user</span><span class="Other">:</span> <a href="audius.html#UserSchema"><span class="Identifier">UserSchema</span></a>
-</pre></dt>
-<dd>
-
-
+<a class="reference external" href="https://audiusproject.github.io/api-docs/#tocS_Track">Track schema</a>
 
 </dd>
 <a id="Playlist"></a>
-<dt><pre><a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">schema</span><span class="Other">:</span> <a href="audius.html#PlaylistSchema"><span class="Identifier">PlaylistSchema</span></a>
+<dt><pre><a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">description</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">playlistName</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">repostCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">favoriteCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">totalPlayCount</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
+  <span class="Identifier">isAlbum</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">user</span><span class="Operator">*</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a>
   <span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a>
 </pre></dt>
 <dd>
 
-
+<a class="reference external" href="https://audiusproject.github.io/api-docs/#tocS_playlist">Playlist schema</a>
 
 </dd>
 
@@ -280,6 +320,13 @@ function main() {
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
+<a id="parseHook,string,int,Audius"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#parseHook%2Cstring%2Cint%2CAudius"><span class="Identifier">parseHook</span></a><span class="Other">(</span><span class="Identifier">s</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">i</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Warning: Do not use! This is a hook for jsony lib.
+
+</dd>
 <a id="newAudius,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#newAudius%2Cstring"><span class="Identifier">newAudius</span></a><span class="Other">(</span><span class="Identifier">appName</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;EXAMPLEAPP&quot;</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span>
     <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
@@ -287,17 +334,17 @@ function main() {
     <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadEnvEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+This create a new <a class="reference external" href="#Audius">Audius</a> API (v1) client and select a host.
 
 </dd>
 <a id="getTrack,Audius,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getTrack%2CAudius%2Cstring"><span class="Identifier">getTrack</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Track"><span class="Identifier">Track</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
-    <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonKindError</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getTrack%2CAudius%2Cstring"><span class="Identifier">getTrack</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Track"><span class="Identifier">Track</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonError</span><span class="Other">,</span>
+    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span>
+    <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Fetch a track. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-track">/tracks/{track_id}</a>
 
 </dd>
 <a id="getStreamTrack,Audius,string"></a>
@@ -307,27 +354,90 @@ function main() {
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
+<p>Get the track's streamable mp3 file. <a class="reference external" href="https://audiusproject.github.io/api-docs/#stream-track">/tracks/{track_id}/stream</a></p>
+<p>Todo: <a class="reference external" href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Range_requests">Range header</a>.</p>
 
 
 </dd>
 <a id="getPlaylist,Audius,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getPlaylist%2CAudius%2Cstring"><span class="Identifier">getPlaylist</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span>
-    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span>
-    <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonKindError</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getPlaylist%2CAudius%2Cstring"><span class="Identifier">getPlaylist</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span>
+    <span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span>
+    <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
+Fetch a playlist. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-playlist">/playlists/{playlist_id}</a>
 
+</dd>
+<a id="searchPlaylists,Audius,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#searchPlaylists%2CAudius%2Cstring"><span class="Identifier">searchPlaylists</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">onlyDowloadable</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span>
+    <a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span>
+                         <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
+                         <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
+                <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Search for a playlist. <a class="reference external" href="https://audiusproject.github.io/api-docs/#search-playlists">/playlists/search</a>
+
+</dd>
+<a id="tracks,Playlist"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#tracks%2CPlaylist"><span class="Identifier">tracks</span></a><span class="Other">(</span><span class="Identifier">playlist</span><span class="Other">:</span> <a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="audius.html#Track"><span class="Identifier">Track</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
+    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
+    <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Search for a track. <a class="reference external" href="https://audiusproject.github.io/api-docs/#search-tracks">/tracks/search</a>
 
 </dd>
 <a id="getUser,Audius,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getUser%2CAudius%2Cstring"><span class="Identifier">getUser</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
-    <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonKindError</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#getUser%2CAudius%2Cstring"><span class="Identifier">getUser</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonError</span><span class="Other">,</span>
+    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span>
+    <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
+Fetch a single user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-user">/users/{user_id}</a>
 
+</dd>
+<a id="searchUsers,Audius,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#searchUsers%2CAudius%2Cstring"><span class="Identifier">searchUsers</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">onlyDowloadable</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="audius.html#User"><span class="Identifier">User</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span>
+    <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Search for a user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#search-users">/users/search</a>
+
+</dd>
+<a id="tracks,User"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#tracks%2CUser"><span class="Identifier">tracks</span></a><span class="Other">(</span><span class="Identifier">user</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="audius.html#Track"><span class="Identifier">Track</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
+    <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span>
+    <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+                                     <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Fetch a list of tracks for a user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-user-39-s-tracks">/users/{user_id}/tracks</a>
+
+</dd>
+<a id="favorites,User"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#favorites%2CUser"><span class="Identifier">favorites</span></a><span class="Other">(</span><span class="Identifier">user</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="audius.html#Track"><span class="Identifier">Track</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
+    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
+    <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Fetch favorited tracks for a user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-user-39-s-favorite-tracks">/users/{user_id}/favorites</a>
+
+</dd>
+<a id="reposts,User"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#reposts%2CUser"><span class="Identifier">reposts</span></a><span class="Other">(</span><span class="Identifier">user</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="audius.html#Track"><span class="Identifier">Track</span></a><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
+    <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span>
+    <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+                                     <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Fetch reposted tracks for a user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-user-39-s-reposts">/users/{user_id}/reposts</a>
 
 </dd>
 
@@ -335,6 +445,16 @@ function main() {
 <div class="section" id="15">
 <h1><a class="toc-backref" href="#15">Iterators</a></h1>
 <dl class="item">
+<a id="searchPlaylists.i,Audius,string"></a>
+<dt><pre><span class="Keyword">iterator</span> <a href="#searchPlaylists.i%2CAudius%2Cstring"><span class="Identifier">searchPlaylists</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">onlyDowloadable</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span>
+    <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+Search for a playlist. <a class="reference external" href="https://audiusproject.github.io/api-docs/#search-playlists">/playlists/search</a>
+
+</dd>
 <a id="tracks.i,Playlist"></a>
 <dt><pre><span class="Keyword">iterator</span> <a href="#tracks.i%2CPlaylist"><span class="Identifier">tracks</span></a><span class="Other">(</span><span class="Identifier">playlist</span><span class="Other">:</span> <a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Track"><span class="Identifier">Track</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
     <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
@@ -342,47 +462,47 @@ function main() {
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Search for a track. <a class="reference external" href="https://audiusproject.github.io/api-docs/#search-tracks">/tracks/search</a>
 
 </dd>
-<a id="searchPlaylists.i,Audius,string"></a>
-<dt><pre><span class="Keyword">iterator</span> <a href="#searchPlaylists.i%2CAudius%2Cstring"><span class="Identifier">searchPlaylists</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">onlyDowloadable</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
+<a id="searchUsers.i,Audius,string"></a>
+<dt><pre><span class="Keyword">iterator</span> <a href="#searchUsers.i%2CAudius%2Cstring"><span class="Identifier">searchUsers</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">onlyDowloadable</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
     <span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span>
-    <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonKindError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Search for a user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#search-users">/users/search</a>
 
 </dd>
 <a id="tracks.i,User"></a>
 <dt><pre><span class="Keyword">iterator</span> <a href="#tracks.i%2CUser"><span class="Identifier">tracks</span></a><span class="Other">(</span><span class="Identifier">user</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Track"><span class="Identifier">Track</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
     <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span>
-    <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonKindError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+                                     <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Fetch a list of tracks for a user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-user-39-s-tracks">/users/{user_id}/tracks</a>
 
 </dd>
 <a id="favorites.i,User"></a>
 <dt><pre><span class="Keyword">iterator</span> <a href="#favorites.i%2CUser"><span class="Identifier">favorites</span></a><span class="Other">(</span><span class="Identifier">user</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Track"><span class="Identifier">Track</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
     <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span>
-    <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonKindError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+                                     <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Fetch favorited tracks for a user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-user-39-s-favorite-tracks">/users/{user_id}/favorites</a>
 
 </dd>
 <a id="reposts.i,User"></a>
 <dt><pre><span class="Keyword">iterator</span> <a href="#reposts.i%2CUser"><span class="Identifier">reposts</span></a><span class="Other">(</span><span class="Identifier">user</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#Track"><span class="Identifier">Track</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
     <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span> <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span>
-    <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonKindError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+                                     <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+Fetch reposted tracks for a user. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-user-39-s-reposts">/users/{user_id}/reposts</a>
 
 </dd>
 <a id="tags.i,User"></a>
@@ -392,16 +512,8 @@ function main() {
                                      <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
-
-</dd>
-<a id="searchUsers.i,Audius,string"></a>
-<dt><pre><span class="Keyword">iterator</span> <a href="#searchUsers.i%2CAudius%2Cstring"><span class="Identifier">searchUsers</span></a><span class="Other">(</span><span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">onlyDowloadable</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">)</span><span class="Other">:</span> <a href="audius.html#User"><span class="Identifier">User</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">JsonError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">HttpRequestError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">LibraryError</span><span class="Other">,</span>
-    <span class="Identifier">SslError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">TimeoutError</span><span class="Other">,</span> <span class="Identifier">ProtocolError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">JsonKindError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
+<p>Warning: This don't work. API is broken !?</p>
+<p>Fetch most used tags in a user's tracks. <a class="reference external" href="https://audiusproject.github.io/api-docs/#get-user-39-s-most-used-track-tags">/users/{user_id}/tags</a></p>
 
 
 </dd>
@@ -415,7 +527,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-24 08:43:52 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-24 13:11:57 UTC</small>
       </div>
     </div>
   </div>
