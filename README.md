@@ -11,14 +11,14 @@ The official API documentation can be found [here](https://audiusproject.github.
 import audius
 
 #Create new audius client.
-let audius = newAudius()
+let client = newAudius()
 
 # Search users.
-for user in audius.searchUsers("Brownies"):
+for user in client.searchUsers("Brownies"):
   echo "User: " & user.schema.name
 
 # Create new user by id.
-let user = audius.getUser("nlGNe")
+let user = client.getUser("nlGNe")
 
 # List user's tracks.
 for track in user.tracks:
@@ -37,11 +37,11 @@ for tag in user.tags:
   echo "Tag: " & tag
 
 # Search playlists
-for playlist in audius.searchPlaylists("Hot & New"):
+for playlist in client.searchPlaylists("Hot & New"):
   echo "Palylist: " & playlist.schema.playlist_name
 
 # Create new playlist by id.
-let playlist = audius.getPlaylist("DOPRl")
+let playlist = client.getPlaylist("DOPRl")
 
 # List tracks in playlist.
 for track in playlist.tracks:
