@@ -118,7 +118,7 @@ type
         hipHopRap = "Hip-Hop%2FRap", experimental, punk, folk, pop, ambient,
         soundtrack, world, jazz, acoustic, funk, rbSoul = "R%26B%2FSoul",
         devotional, classical, reggae, podcasts, country,
-        spokenWord = "Spoken+Word", comedy, blues, kids = "kids", audiobooks, latin
+        spokenWord = "Spoken+Word", comedy, blues, kids, audiobooks, latin
 
 # Audius
 template get(api: Audius, query: string): JsonNode =
