@@ -101,15 +101,20 @@ function main() {
   headers: HttpHeaders
   appName: string
   server: string">Audius</a></li>
+  <li><a class="reference" href="#Artwork"
+    title="Artwork = object
+  small*, medium*, big*: string">Artwork</a></li>
   <li><a class="reference" href="#User"
     title="User = object
   albumCount*, followeeCount*, followerCount*, playlistCount*, repostCount*,
   trackCount*: int
   bio*, handle*, id*, location*, name*: string
+  coverPhoto*, profilePicture*: Artwork
   isVerified*: bool
   api: Audius">User</a></li>
   <li><a class="reference" href="#Track"
     title="Track = object
+  trackArtwork: Artwork
   description*, genre*, id*, mood*, releaseDate*, tags*, title*: string
   repostCount*, favoriteCount*, duration*, playCount*: int
   downloadable*: bool
@@ -117,6 +122,7 @@ function main() {
   api: Audius">Track</a></li>
   <li><a class="reference" href="#Playlist"
     title="Playlist = object
+  playlistArtwork: Artwork
   description*, id*, playlistName*: string
   repostCount*, favoriteCount*, totalPlayCount*: int
   isAlbum*: bool
@@ -172,6 +178,11 @@ function main() {
   <ul class="simple nested-toc-section">reposts
       <li><a class="reference" href="#reposts%2CUser"
     title="reposts(user: User): seq[Track]">reposts,<wbr>User</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">renameHook
+      <li><a class="reference" href="#renameHook%2CArtwork%2Cstring"
+    title="renameHook(v: var Artwork; fieldName: var string)">renameHook,<wbr>Artwork,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">favorites
@@ -276,11 +287,26 @@ function main() {
 Audius API client.
 
 </dd>
+<a id="Artwork"></a>
+<dt><pre><a href="audius.html#Artwork"><span class="Identifier">Artwork</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">small</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">medium</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">big</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+</pre></dt>
+<dd>
+
+<p><a class="reference external" href="https://audiusproject.github.io/api-docs/#tocS_cover_photo">Cover photo schema</a></p>
+<p><a class="reference external" href="https://audiusproject.github.io/api-docs/#tocS_profile_picture">Profile picture</a></p>
+<p><a class="reference external" href="https://audiusproject.github.io/api-docs/#tocS_track_artwork">Track artwork schema</a></p>
+<p><a class="reference external" href="https://audiusproject.github.io/api-docs/#tocS_playlist_artwork">Playlist artwork schema</a></p>
+<p><tt class="docutils literal"><span class="pre">small</span></tt> = 150x &amp; 640x, <tt class="docutils literal"><span class="pre">medium</span></tt> = 480x, <tt class="docutils literal"><span class="pre">big</span></tt> = 1000x &amp; 2000x</p>
+
+
+</dd>
 <a id="User"></a>
 <dt><pre><a href="audius.html#User"><span class="Identifier">User</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
   <span class="Identifier">albumCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">followeeCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">followerCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">playlistCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">repostCount</span><span class="Operator">*</span><span class="Other">,</span>
   <span class="Identifier">trackCount</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
   <span class="Identifier">bio</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">handle</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">location</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">coverPhoto</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">profilePicture</span><span class="Operator">*</span><span class="Other">:</span> <a href="audius.html#Artwork"><span class="Identifier">Artwork</span></a>
   <span class="Identifier">isVerified</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">api</span><span class="Other">:</span> <a href="audius.html#Audius"><span class="Identifier">Audius</span></a>
 </pre></dt>
@@ -291,6 +317,7 @@ Audius API client.
 </dd>
 <a id="Track"></a>
 <dt><pre><a href="audius.html#Track"><span class="Identifier">Track</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">trackArtwork</span><span class="Other">:</span> <a href="audius.html#Artwork"><span class="Identifier">Artwork</span></a>
   <span class="Identifier">description</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">genre</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">mood</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">releaseDate</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">title</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
   <span class="Identifier">repostCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">favoriteCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">duration</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">playCount</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
   <span class="Identifier">downloadable</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
@@ -304,6 +331,7 @@ Audius API client.
 </dd>
 <a id="Playlist"></a>
 <dt><pre><a href="audius.html#Playlist"><span class="Identifier">Playlist</span></a> <span class="Other">=</span> <span class="Keyword">object</span>
+  <span class="Identifier">playlistArtwork</span><span class="Other">:</span> <a href="audius.html#Artwork"><span class="Identifier">Artwork</span></a>
   <span class="Identifier">description</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">playlistName</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
   <span class="Identifier">repostCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">favoriteCount</span><span class="Operator">*</span><span class="Other">,</span> <span class="Identifier">totalPlayCount</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
   <span class="Identifier">isAlbum</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
@@ -325,6 +353,15 @@ Audius API client.
 <dd>
 
 Warning: Do not use! This is a hook for jsony lib.
+
+</dd>
+<a id="renameHook,Artwork,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#renameHook%2CArtwork%2Cstring"><span class="Identifier">renameHook</span></a><span class="Other">(</span><span class="Identifier">v</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="audius.html#Artwork"><span class="Identifier">Artwork</span></a><span class="Other">;</span> <span class="Identifier">fieldName</span><span class="Other">:</span> <span class="Keyword">var</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+<p>Warning: Do not use! This is a hook for jsony lib.</p>
+<p>Rename field: <tt class="docutils literal"><span class="pre">small</span></tt> = 150x &amp; 640x, <tt class="docutils literal"><span class="pre">medium</span></tt> = 480x, <tt class="docutils literal"><span class="pre">big</span></tt> = 1000x &amp; 2000x</p>
+
 
 </dd>
 <a id="newAudius,string"></a>
@@ -527,7 +564,7 @@ Fetch reposted tracks for a user. <a class="reference external" href="https://au
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-24 13:11:57 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-27 21:20:13 UTC</small>
       </div>
     </div>
   </div>

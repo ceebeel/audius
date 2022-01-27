@@ -13,15 +13,16 @@
     import audius
 
     # Create new Audius client.
-    let audius = newAudius()
+    let client = newAudius()
 
     # Search users.
-    for user in audius.searchUsers("Brownies"):
+    for user in client.searchUsers("Brownies"):
       echo "User found: " & user.name
 
     # Create new user by id.
-    let user = audius.getUser("nlGNe")
-    echo "User name: " & user.name
+    let user = client.getUser("nlGNe")
+    echo "User name: " & user.name &
+        " Profile Picture: " & user.profilePicture.small
 
     # List user's tracks.
     for track in user.tracks:
@@ -40,11 +41,11 @@
       echo "User's Tag: " & tag
 
     # Search playlists
-    for playlist in audius.searchPlaylists("Hot & New"):
+    for playlist in client.searchPlaylists("Hot & New"):
       echo "Palylist found: " & playlist.playlistName
 
     # Create new playlist by id.
-    let playlist = audius.getPlaylist("DOPRl")
+    let playlist = client.getPlaylist("DOPRl")
     echo "Playlist name:"
 
     # List tracks in playlist.
@@ -66,18 +67,30 @@ type
     appName: string
     server: string
 
+  Artwork* = object
+    ## `Cover photo schema<https://audiusproject.github.io/api-docs/#tocS_cover_photo>`_  
+    ## 
+    ## `Profile picture<https://audiusproject.github.io/api-docs/#tocS_profile_picture>`_  
+    ## 
+    ## `Track artwork schema<https://audiusproject.github.io/api-docs/#tocS_track_artwork>`_  
+    ## 
+    ## `Playlist artwork schema<https://audiusproject.github.io/api-docs/#tocS_playlist_artwork>`_  
+    ## 
+    ## `small` = 150x & 640x, `medium` = 480x, `big` = 1000x & 2000x
+    small*, medium*, big*: string
+
   User* = object
     ## `User schema<https://audiusproject.github.io/api-docs/#tocS_user>`_
     albumCount*, followeeCount*, followerCount*, playlistCount*, repostCount*,
         trackCount*: int
     bio*, handle*, id*, location*, name*: string
-    #coverPhoto*, profitePicture*: string
+    coverPhoto*, profilePicture*: Artwork
     isVerified*: bool
     api: Audius
 
   Track* = object
     ## `Track schema<https://audiusproject.github.io/api-docs/#tocS_Track>`_
-    #artwork
+    trackArtwork: Artwork
     description*, genre*, id*, mood*, releaseDate*, tags*, title*: string
     repostCount*, favoriteCount*, duration*, playCount*: int
     downloadable*: bool
@@ -86,7 +99,7 @@ type
 
   Playlist* = object
     ## `Playlist schema<https://audiusproject.github.io/api-docs/#tocS_playlist>`_
-    #artwork
+    playlistArtwork: Artwork
     description*, id*, playlistName*: string
     repostCount*, favoriteCount*, totalPlayCount*: int
     isAlbum*: bool
@@ -95,12 +108,27 @@ type
 
 # Audius
 template get(api: untyped, query: string): JsonNode =
-  ## Simple template api (string) to jsonNode.
+  ## Simple template, api (string) to jsonNode.
   fromJson(api.client.getContent(api.server & query & "?app_name=" & api.appName))
 
 proc parseHook*(s: string, i: var int, v: var Audius) =
   ## Warning: Do not use! This is a hook for jsony lib.
   discard
+
+proc renameHook*(v: var Artwork, fieldName: var string) =
+  ## Warning: Do not use! This is a hook for jsony lib.
+  ## 
+  ## Rename field: `small` = 150x & 640x, `medium` = 480x, `big` = 1000x & 2000x
+  if fieldName == "150x150":
+    fieldName = "small"
+  elif fieldName == "480x480":
+    fieldName = "medium"
+  elif fieldName == "1000x1000":
+    fieldName = "big"
+  elif fieldName == "640x":
+    fieldName = "small"
+  elif fieldName == "2000x":
+    fieldName = "big"
 
 proc newAudius*(appName: string = "EXAMPLEAPP"): Audius =
   ## This create a new `Audius <#Audius>`_ API (v1) client and select a host.
@@ -157,7 +185,6 @@ iterator tracks*(playlist: Playlist): Track =
   ## Search for a track. 
   ## `/tracks/search<https://audiusproject.github.io/api-docs/#search-tracks>`_
   let query = playlist.api.get("/playlists/" & playlist.id & "/tracks")
-  echo $query
   for track in query["data"]:
     var result = fromJson($track, Track)
     result.api = playlist.api

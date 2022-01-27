@@ -1,15 +1,16 @@
 import audius
 
 # Create new Audius client.
-let audius = newAudius()
+let client = newAudius()
 
 # Search users.
-for user in audius.searchUsers("Brownies"):
+for user in client.searchUsers("Brownies"):
   echo "User found: " & user.name
 
 # Create new user by id.
-let user = audius.getUser("nlGNe")
-echo "User name: " & user.name
+let user = client.getUser("nlGNe")
+echo "User name: " & user.name &
+    " Profile Picture: " & user.profilePicture.small
 
 # List user's tracks.
 for track in user.tracks:
@@ -28,12 +29,12 @@ for tag in user.tags:
   echo "User's Tag: " & tag
 
 # Search playlists
-for playlist in audius.searchPlaylists("Hot & New"):
+for playlist in client.searchPlaylists("Hot & New"):
   echo "Palylist found: " & playlist.playlistName
 
 # Create new playlist by id.
-let playlist = audius.getPlaylist("DOPRl")
-echo "Playlist name:"
+let playlist = client.getPlaylist("DOPRl")
+echo "Playlist name: " & playlist.playlistName
 
 # List tracks in playlist.
 for track in playlist.tracks:
