@@ -207,8 +207,8 @@ iterator searchPlaylists*(api: Audius, query: string,
     onlyDowloadable = false): Playlist =
   ## Search for a playlist.
   ## `/playlists/search<https://audiusproject.github.io/api-docs/#search-playlists>`_
-  let query = api.get("/playlists/search?query=" & encodeUrl(query) &
-      "&only_downloadable=" & $onlyDowloadable)
+  let query = api.get("/playlists/search/", [("query", encodeUrl(query)), (
+      "only_downloadable", $onlyDowloadable)])
   for playlist in query["data"]:
     var result = fromJson($playlist, Playlist)
     result.api = api
@@ -240,7 +240,7 @@ proc tracks*(playlist: Playlist): seq[Track] =
 proc getUser*(api: Audius, id: string): User =
   ## Fetch a single user.
   ## `/users/{user_id}<https://audiusproject.github.io/api-docs/#get-user>`_
-  let query = api.get("/users/" & id & "?app_name=")["data"]
+  let query = api.get("/users/" & id)["data"]
   result = fromJson($query, User)
   result.api = api
 
@@ -248,8 +248,8 @@ iterator searchUsers*(api: Audius, query: string,
     onlyDowloadable = false): User =
   ## Search for a user.
   ## `/users/search<https://audiusproject.github.io/api-docs/#search-users>`_
-  let query = api.get("/users/search?query=" & encodeUrl(query) &
-      "&only_downloadable=" & $onlyDowloadable)
+  let query = api.get("/users/search/", [("query", encodeUrl(query)), (
+      "only_downloadable", $onlyDowloadable)])
   for user in query["data"]:
     var result = fromJson($user, User)
     result.api = api
