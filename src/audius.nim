@@ -120,6 +120,26 @@ type
         devotional, classical, reggae, podcasts, country,
         spokenWord = "Spoken+Word", comedy, blues, kids, audiobooks, latin
 
+#Hook for lib jsony.
+proc parseHook*(s: string, i: var int, v: var Audius) =
+  ## Warning: Do not use! This is a hook for jsony lib.
+  discard
+
+proc renameHook*(v: var Artwork, fieldName: var string) =
+  ## Warning: Do not use! This is a hook for jsony lib.
+  ##
+  ## Rename field: `small` = 150x & 640x, `medium` = 480x, `big` = 1000x & 2000x
+  if fieldName == "150x150":
+    fieldName = "small"
+  elif fieldName == "480x480":
+    fieldName = "medium"
+  elif fieldName == "1000x1000":
+    fieldName = "big"
+  elif fieldName == "640x":
+    fieldName = "small"
+  elif fieldName == "2000x":
+    fieldName = "big"
+
 # Audius client
 proc newAudius*(appName: string = "EXAMPLEAPP"): Audius =
   ## This create a new `Audius <#Audius>`_ API (v1) client and select a host.
@@ -294,23 +314,3 @@ iterator tags*(user: User): string =
   let query = user.api.get("/users/" & user.id & "/tags")
   for tag in query["data"].getStr.split(','):
     yield tag
-
-#Hook for lib jsony.
-proc parseHook*(s: string, i: var int, v: var Audius) =
-  ## Warning: Do not use! This is a hook for jsony lib.
-  discard
-
-proc renameHook*(v: var Artwork, fieldName: var string) =
-  ## Warning: Do not use! This is a hook for jsony lib.
-  ##
-  ## Rename field: `small` = 150x & 640x, `medium` = 480x, `big` = 1000x & 2000x
-  if fieldName == "150x150":
-    fieldName = "small"
-  elif fieldName == "480x480":
-    fieldName = "medium"
-  elif fieldName == "1000x1000":
-    fieldName = "big"
-  elif fieldName == "640x":
-    fieldName = "small"
-  elif fieldName == "2000x":
-    fieldName = "big"
