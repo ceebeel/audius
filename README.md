@@ -1,13 +1,13 @@
-# Audius
+# Nim Audius API Library
 Audius is a simple client library for interacting with the Audius free API. (audius.org)\
 Check the module [documentation](https://ceebeel.github.io/audius/).
 The official API documentation can be found [here](https://audiusproject.github.io/api-docs/#audius-api-docs).
 
-# Installation
+## Installation
 ```nimble install audius```
 
-# Example
-```
+## Example
+```nim
 import audius
 
 #Create new audius client.
@@ -47,7 +47,7 @@ let playlist = client.getPlaylist("DOPRl")
 for track in playlist.tracks:
   echo "Playlist Track: " & track.schema.title
 ```
-# Compilation 
+## Compilation 
 - Use SSL:
 ```nim r -d:ssl examples/simple.nim```
 - Add [cacert.pem](bin/cacert.pem) in your running directory.
