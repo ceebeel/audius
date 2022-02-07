@@ -2,7 +2,7 @@
 [![Build Status](https://nimble.directory/ci/badges/audius/nimdevel/status.svg)](https://nimble.directory/ci/badges/audius/nimdevel/output.html)
 [![Build Status](https://nimble.directory/ci/badges/audius/nimdevel/docstatus.svg)](https://nimble.directory/ci/badges/audius/nimdevel/doc_build_output.html)
 [![Build Status](https://nimble.directory/ci/badges/audius/version.svg)](https://nimble.directory/ci/badges/audius/nimdevel/doc_build_output.html)
-\
+\\
 Audius is a simple client library for interacting with the Audius free API. (audius.org)\
 Check the module [documentation](https://ceebeel.github.io/audius/).
 The official API documentation can be found [here](https://audiusproject.github.io/api-docs/#audius-api-docs).
