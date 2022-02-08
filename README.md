@@ -20,22 +20,22 @@ let client = newAudius()
 
 # Search users.
 for user in client.searchUsers("Brownies"):
-  echo "User: " & user.schema.name
+  echo "User: " & user.name
 
 # Create new user by id.
 let user = client.getUser("nlGNe")
 
 # List user's tracks.
 for track in user.tracks:
-  echo "Track: " & track.schema.title
+  echo "Track: " & track.title
 
 # List user's favorite tracks.
 for favorite in user.favorites:
-  echo "Favorite: " & favorite.schema.title
+  echo "Favorite: " & favorite.title
 
 # List user reposted tracks.
 for repost in user.reposts:
-  echo "Repost: " & repost.schema.title
+  echo "Repost: " & repost.title
 
 # List common user's tags.
 for tag in user.tags:
@@ -43,14 +43,14 @@ for tag in user.tags:
 
 # Search playlists
 for playlist in client.searchPlaylists("Hot & New"):
-  echo "Palylist: " & playlist.schema.playlist_name
+  echo "Palylist: " & playlist.playlist_name
 
 # Create new playlist by id.
 let playlist = client.getPlaylist("DOPRl")
 
 # List tracks in playlist.
 for track in playlist.tracks:
-  echo "Playlist Track: " & track.schema.title
+  echo "Playlist Track: " & track.title
 ```
 ## Compilation 
 - Use SSL:
