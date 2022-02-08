@@ -43,7 +43,7 @@ for tag in user.tags:
 
 # Search playlists
 for playlist in client.searchPlaylists("Hot & New"):
-  echo "Palylist: " & playlist.playlist_name
+  echo "Palylist: " & playlist.playlistName
 
 # Create new playlist by id.
 let playlist = client.getPlaylist("DOPRl")
