@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="128px" src="./audius.nim.svg"></img>
+  <img width="128px" src="https://github.com/ceebeel/audius/raw/master/audius.nim.svg"></img>
   <h1>Nim Audius API Library</h1>
   <p>A simple client library for interacting with the Audius free API. (audius.org)</p>
 
