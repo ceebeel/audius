@@ -1,15 +1,23 @@
-# Nim Audius API Library
+<div align="center">
+  <img width="128px" src="./audius.nim.svg"></img>
+  <h1>Nim Audius API Library</h1>
+  <p>A simple client library for interacting with the Audius free API. (audius.org)</p>
+
+
 [![Build Status](https://nimble.directory/ci/badges/audius/nimdevel/status.svg)](https://nimble.directory/ci/badges/audius/nimdevel/output.html)
 [![Build Status](https://nimble.directory/ci/badges/audius/nimdevel/docstatus.svg)](https://nimble.directory/ci/badges/audius/nimdevel/doc_build_output.html)
 [![Build Status](https://nimble.directory/ci/badges/audius/version.svg)](https://nimble.directory/ci/badges/audius/nimdevel/doc_build_output.html)
+</div>
+
+
 \
-\
-Audius is a simple client library for interacting with the Audius free API. (audius.org)\
 Check the module [documentation](https://ceebeel.github.io/audius/).
 The official API documentation can be found [here](https://audiusproject.github.io/api-docs/#audius-api-docs).
 
 ## Installation
-```nimble install audius```
+```
+nimble install audius
+```
 
 ## Example
 ```nim
