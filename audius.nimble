@@ -5,8 +5,6 @@ author        = "CeeBeeL"
 description   = "Audius API"
 license       = "MIT"
 srcDir        = "src"
-binDir        = "bin"
-bin           = @["audius"]
 
 
 # Dependencies
